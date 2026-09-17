@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+<Container version="2">
+  <Name>VaulTLS</Name>
+  <Repository>ghcr.io/7ritn/vaultls:latest</Repository>
+  <Registry>https://github.com/7ritn/VaulTLS/pkgs/container/vaultls</Registry>
+  <Network>bridge</Network>
+  <MyIP/>
+  <Shell>sh</Shell>
+  <Privileged>false</Privileged>
+  <Support>https://github.com/7ritn/VaulTLS/issues</Support>
+  <Project>https://github.com/7ritn/VaulTLS</Project>
+  <Overview>Selfhostable web app to manage mTLS certificates: create, distribute and track expirations, with optional OIDC login and ACME CA support (Traefik, acme.sh). Recommended to run behind a reverse proxy for TLS termination.</Overview>
+  <Category>Network:Security Tools:</Category>
+  <WebUI>http://[IP]:[PORT:5173]/</WebUI>
+  <Icon>https://cdn.jsdelivr.net/gh/selfhst/icons/png/vaultls.png</Icon>
+  <ExtraParams></ExtraParams>
+  <DateInstalled></DateInstalled>
+  <DonateText/>
+  <DonateLink/>
+
+  <!-- Port: container listens on 80, host port is free to choose (README example: 5173) -->
+  <Config Name="WebUI Port" Target="80" Default="5173" Mode="tcp" Description="Port for the web interface" Type="Port" Display="always" Required="true" Mask="false">5173</Config>
+
+  <!-- Data volume: database, CA certificate (ca.cert) and CRLs -->
+  <Config Name="Data" Target="/app/data" Default="/mnt/user/appdata/vaultls" Mode="rw" Description="Contains database, CA certificate and CRLs" Type="Path" Display="always" Required="true" Mask="false">/mnt/user/appdata/vaultls</Config>
+
+  <!-- Required: API secret, 256-bit base64 string. Generate with: openssl rand -base64 32 -->
+  <Config Name="VAULTLS_API_SECRET" Target="VAULTLS_API_SECRET" Default="" Mode="" Description="Required. Generate with: openssl rand -base64 32" Type="Variable" Display="always" Required="true" Mask="true"></Config>
+
+  <!-- Public URL where VaulTLS is reachable -->
+  <Config Name="VAULTLS_URL" Target="VAULTLS_URL" Default="https://vaultls.example.com/" Mode="" Description="Public URL of this VaulTLS instance" Type="Variable" Display="always" Required="false" Mask="false">https://vaultls.example.com/</Config>
+
+  <!-- Set to true if you're not using HTTPS/a reverse proxy -->
+  <Config Name="VAULTLS_INSECURE" Target="VAULTLS_INSECURE" Default="false" Mode="" Description="Set to 'true' if you want to access without HTTPS (not recommended)" Type="Variable" Display="always" Required="false" Mask="false">false</Config>
+
+  <!-- Optional: database encryption -->
+  <Config Name="VAULTLS_DB_SECRET" Target="VAULTLS_DB_SECRET" Default="" Mode="" Description="Optional: encrypts the database. Note: this is irreversible. Remove this variable if not needed to prevent startup errors." Type="Variable" Display="advanced" Required="false" Mask="true"></Config>
+
+  <!-- Optional: log level -->
+  <Config Name="VAULTLS_LOG_LEVEL" Target="VAULTLS_LOG_LEVEL" Default="info" Mode="" Description="Log level: error, warn, info, debug, trace" Type="Variable" Display="advanced" Required="false" Mask="false">info</Config>
+
+  <!-- Optional: OIDC login -->
+  <Config Name="VAULTLS_OIDC_AUTH_URL" Target="VAULTLS_OIDC_AUTH_URL" Default="" Mode="" Description="OIDC: base URL of your auth provider" Type="Variable" Display="advanced" Required="false" Mask="false"></Config>
+  <Config Name="VAULTLS_OIDC_CALLBACK_URL" Target="VAULTLS_OIDC_CALLBACK_URL" Default="" Mode="" Description="OIDC: callback URL, e.g. https://vaultls.example.com/api/auth/oidc/callback" Type="Variable" Display="advanced" Required="false" Mask="false"></Config>
+  <Config Name="VAULTLS_OIDC_ID" Target="VAULTLS_OIDC_ID" Default="" Mode="" Description="OIDC: client ID" Type="Variable" Display="advanced" Required="false" Mask="false"></Config>
+  <Config Name="VAULTLS_OIDC_SECRET" Target="VAULTLS_OIDC_SECRET" Default="" Mode="" Description="OIDC: client secret" Type="Variable" Display="advanced" Required="false" Mask="true"></Config>
+
+  <!-- Optional: ACME CA functionality -->
+  <Config Name="VAULTLS_ACME_ENABLED" Target="VAULTLS_ACME_ENABLED" Default="false" Mode="" Description="Set to 'true' to use VaulTLS as an ACME CA (e.g. for Traefik/acme.sh)" Type="Variable" Display="advanced" Required="false" Mask="false">false</Config>
+</Container>
