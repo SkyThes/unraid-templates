@@ -1,6 +1,8 @@
-<?xml version="1.0"?>
-<Profile>
-  <Overview>Unraid Docker templates maintained by SkyThes. Currently includes a template for VaulTLS, a selfhostable web app for managing mTLS certificates.</Overview>
+<?xml version="1.0" encoding="utf-8"?>
+<Maintainer>
+  <Profile>
+    Unraid Docker templates maintained by SkyThes. Currently includes a template for VaulTLS, a selfhostable web app for managing mTLS certificates.
+  </Profile>
   <Support>https://github.com/SkyThes/unraid-templates/issues</Support>
-  <Author>SkyThes</Author>
-</Profile>
+</Maintainer>
+
