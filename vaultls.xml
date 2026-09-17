@@ -10,8 +10,8 @@
   <Support>https://github.com/7ritn/VaulTLS/issues</Support>
   <Project>https://github.com/7ritn/VaulTLS</Project>
   <Overview>Selfhostable web app to manage mTLS certificates: create, distribute and track expirations, with optional OIDC login and ACME CA support (Traefik, acme.sh). Recommended to run behind a reverse proxy for TLS termination.</Overview>
-  <Category>Network:Security Tools:</Category>
-  <WebUI>http://[IP]:[PORT:5173]/</WebUI>
+  <Category>Security: Tools:</Category>
+  <WebUI>http://[IP]:[PORT:80]/</WebUI>
   <Icon>https://cdn.jsdelivr.net/gh/selfhst/icons/png/vaultls.png</Icon>
   <ExtraParams></ExtraParams>
   <DateInstalled></DateInstalled>
@@ -34,7 +34,7 @@
   <Config Name="VAULTLS_INSECURE" Target="VAULTLS_INSECURE" Default="false" Mode="" Description="Set to 'true' if you want to access without HTTPS (not recommended)" Type="Variable" Display="always" Required="false" Mask="false">false</Config>
 
   <!-- Optional: database encryption -->
-  <Config Name="VAULTLS_DB_SECRET" Target="VAULTLS_DB_SECRET" Default="" Mode="" Description="Optional: encrypts the database. Note: this is irreversible. Remove this variable if not needed to prevent startup errors." Type="Variable" Display="advanced" Required="false" Mask="true"></Config>
+  <Config Name="VAULTLS_DB_SECRET" Target="VAULTLS_DB_SECRET" Default="" Mode="" Description="Optional: encrypts the database. Note: this is irreversible. Remove if not needed to prevent startup errors" Type="Variable" Display="advanced" Required="false" Mask="true"></Config>
 
   <!-- Optional: log level -->
   <Config Name="VAULTLS_LOG_LEVEL" Target="VAULTLS_LOG_LEVEL" Default="info" Mode="" Description="Log level: error, warn, info, debug, trace" Type="Variable" Display="advanced" Required="false" Mask="false">info</Config>
