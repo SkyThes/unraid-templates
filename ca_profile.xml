@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <CommunityApplications>
   <Profile>
-    Unraid Docker templates maintained by SkyThes. Currently includes a template for VaulTLS, a selfhostable web app for managing mTLS certificates.
+    Unraid Docker templates maintained by SkyThes. Currently includes templates for VaulTLS (mTLS certificate management) and Z2M Device Tracker (Zigbee2MQTT device history and health).
   </Profile>
   <WebPage>https://github.com/SkyThes/unraid-templates</WebPage>
   <!-- <Forum>https://forums.unraid.net/topic/YOUR_SUPPORT_TOPIC</Forum> -->

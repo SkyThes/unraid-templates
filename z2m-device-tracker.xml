@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+<Container version="2">
+  <Name>z2m-device-tracker</Name>
+  <Repository>ghcr.io/tempus2016/z2m-device-tracker:latest</Repository>
+  <Registry>https://github.com/tempus2016/z2m-device-tracker/pkgs/container/z2m-device-tracker</Registry>
+  <Network>bridge</Network>
+  <MyIP/>
+  <Shell>sh</Shell>
+  <Privileged>false</Privileged>
+  <Support>https://github.com/tempus2016/z2m-device-tracker/issues</Support>
+  <Project>https://github.com/tempus2016/z2m-device-tracker</Project>
+  <Overview>History, health and alerts for every Zigbee2MQTT device: network map, battery tracking and issue detection. Listens to Zigbee2MQTT over MQTT and stores the history locally. Standalone Docker version of the Home Assistant app, for Home Assistant Container setups without an App store. Requires an MQTT broker, a Home Assistant long-lived access token and a UI password (8+ characters).</Overview>
+  <Category>HomeAutomation: Tools:</Category>
+  <WebUI>http://[IP]:[PORT:8099]/</WebUI>
+  <Icon>https://raw.githubusercontent.com/tempus2016/z2m-device-tracker/main/z2m_tracker/icon.png</Icon>
+  <ExtraParams></ExtraParams>
+  <DateInstalled></DateInstalled>
+  <DonateText/>
+  <DonateLink/>
+
+  <!-- Port: web UI -->
+  <Config Name="WebUI Port" Target="8099" Default="8099" Mode="tcp" Description="Port for the web interface" Type="Port" Display="always" Required="true" Mask="false">8099</Config>
+
+  <!-- Data volume: history, settings (options.json) and the integration's API token -->
+  <Config Name="Data" Target="/data" Default="/mnt/user/appdata/z2m-device-tracker" Mode="rw" Description="History, settings (options.json) and the HACS integration's API token" Type="Path" Display="always" Required="true" Mask="false">/mnt/user/appdata/z2m-device-tracker</Config>
+
+  <!-- Optional: Home Assistant config folder, read-only, used for the first history import -->
+  <Config Name="Home Assistant config" Target="/homeassistant" Default="" Mode="ro" Description="Optional, read-only: Home Assistant's config folder, used for the first history import. Remove if not needed" Type="Path" Display="always" Required="false" Mask="false"></Config>
+
+  <!-- Required: password for the web UI. UI stays locked until set -->
+  <Config Name="UI_PASSWORD" Target="UI_PASSWORD" Default="" Mode="" Description="Required. Password for the web UI, 8 characters or more. The UI stays locked until it is set" Type="Variable" Display="always" Required="true" Mask="true"></Config>
+
+  <!-- MQTT broker used by Zigbee2MQTT -->
+  <Config Name="MQTT_HOST" Target="MQTT_HOST" Default="" Mode="" Description="Required. Hostname or IP of the MQTT broker Zigbee2MQTT uses, e.g. 192.168.1.10" Type="Variable" Display="always" Required="true" Mask="false"></Config>
+  <Config Name="MQTT_PORT" Target="MQTT_PORT" Default="1883" Mode="" Description="MQTT broker port" Type="Variable" Display="always" Required="false" Mask="false">1883</Config>
+  <Config Name="MQTT_USER" Target="MQTT_USER" Default="" Mode="" Description="MQTT username (leave empty if the broker allows anonymous access)" Type="Variable" Display="always" Required="false" Mask="false"></Config>
+  <Config Name="MQTT_PASS" Target="MQTT_PASS" Default="" Mode="" Description="MQTT password" Type="Variable" Display="always" Required="false" Mask="true"></Config>
+
+  <!-- Home Assistant -->
+  <Config Name="HA_URL" Target="HA_URL" Default="http://192.168.1.10:8123" Mode="" Description="Base URL of Home Assistant, e.g. http://192.168.1.10:8123" Type="Variable" Display="always" Required="true" Mask="false">http://192.168.1.10:8123</Config>
+  <Config Name="HA_TOKEN" Target="HA_TOKEN" Default="" Mode="" Description="Required. Long-lived access token: Home Assistant profile > Security > Long-lived access tokens" Type="Variable" Display="always" Required="true" Mask="true"></Config>
+
+  <!-- Time zone -->
+  <Config Name="TZ" Target="TZ" Default="Europe/Amsterdam" Mode="" Description="Your time zone, e.g. Europe/Amsterdam" Type="Variable" Display="always" Required="false" Mask="false">Europe/Amsterdam</Config>
+
+  <!-- Optional: MQTT over TLS -->
+  <Config Name="MQTT_SSL" Target="MQTT_SSL" Default="false" Mode="" Description="Set to 'true' to connect to the MQTT broker over TLS" Type="Variable" Display="advanced" Required="false" Mask="false">false</Config>
+  <Config Name="MQTT_SSL_VERIFY" Target="MQTT_SSL_VERIFY" Default="true" Mode="" Description="Set to 'false' to skip TLS certificate verification (e.g. self-signed broker certificate)" Type="Variable" Display="advanced" Required="false" Mask="false">true</Config>
+</Container>
