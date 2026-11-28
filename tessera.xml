@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+<Container version="2">
+  <Name>Tessera</Name>
+  <Repository>ghcr.io/maxgramser/homeassistant_espscreen:latest</Repository>
+  <Registry>https://github.com/MaxGramser/homeassistant_espscreen/pkgs/container/homeassistant_espscreen</Registry>
+  <Network>host</Network>
+  <MyIP/>
+  <Shell>sh</Shell>
+  <Privileged>false</Privileged>
+  <Support>https://github.com/MaxGramser/homeassistant_espscreen/issues</Support>
+  <Project>https://github.com/MaxGramser/homeassistant_espscreen</Project>
+  <Overview>Tessera Screen Manager (formerly ESP Screens) designs and flashes ESP32 touch panels that show and control Home Assistant. This template runs it standalone (Home Assistant Container, without Supervisor).&#13;
+&#13;
+BEFORE FIRST START - create the Home Assistant token file:&#13;
+1. In Home Assistant open your profile > Security tab > Long-lived access tokens > Create token. Copy the token (it is only shown once).&#13;
+2. On Unraid create a file named ha_token in the Data path (default /mnt/user/appdata/tessera/data/ha_token). The file must contain ONLY the token: no quotes, no "Bearer", no extra text.&#13;
+   Example (Unraid terminal): mkdir -p /mnt/user/appdata/tessera/data &amp;&amp; nano /mnt/user/appdata/tessera/data/ha_token&#13;
+3. Restrict access: chmod 600 /mnt/user/appdata/tessera/data/ha_token&#13;
+4. Set HA_API to an http address of Home Assistant that is reachable from this container, ending in /api (for example http://192.168.1.10:8123/api).&#13;
+5. Start the container and check the log for "Home Assistant connected". If it is missing, check the token file contents and HA_API.&#13;
+&#13;
+Why a file and not a variable: Tessera reads the token from a file (HA_TOKEN_FILE) and has no documented variable for the token itself. If you change the Data path, keep ha_token inside it or change HA_TOKEN_FILE to match the path inside the container.&#13;
+&#13;
+NETWORK AND PORTS: the container uses host networking. Port 8099 is the web UI: it has no login and listens on 127.0.0.1 only, so reach it through a reverse proxy/ingress on the Unraid host or an SSH tunnel, and never expose it. Port 8098 serves camera images and album covers and must be reachable from the screens (check your firewall if screens are on another VLAN).&#13;
+&#13;
+USB FLASHING: to flash a screen over USB, add a Device entry (for example /dev/ttyUSB0) to this container. Otherwise flash from Chrome or Edge on your own computer.&#13;
+&#13;
+BACKUP: back up screens.json and updates.json in the Data path, and the ESPHome config path (screen files and Wi-Fi secrets). The build, esphome, idf and platformio folders in Data are caches.&#13;
+&#13;
+Template issues go to the unraid-templates repo; application issues go to the upstream Tessera repo.</Overview>
+  <Category>HomeAutomation: Tools:</Category>
+  <WebUI>http://[IP]:8099/</WebUI>
+  <TemplateURL>https://raw.githubusercontent.com/SkyThes/unraid-templates/main/tessera.xml</TemplateURL>
+  <Icon>https://raw.githubusercontent.com/SkyThes/unraid-templates/main/icons/tessera.png</Icon>
+  <ExtraParams>--health-start-period=60s</ExtraParams>
+  <PostArgs/>
+  <CPUset/>
+  <DateInstalled/>
+  <DonateText/>
+  <DonateLink/>
+  <Requires>A running Home Assistant (Container or OS) and a long-lived access token saved as ha_token in the Data path.</Requires>
+  <Config Name="ESPHome config path" Target="/config" Default="/mnt/user/appdata/tessera/esphome" Mode="rw" Description="Screen ESPHome files and Wi-Fi secrets. Back this up. Container path must stay /config." Type="Path" Display="always" Required="true" Mask="false">/mnt/user/appdata/tessera/esphome</Config>
+  <Config Name="Data path" Target="/data" Default="/mnt/user/appdata/tessera/data" Mode="rw" Description="Layouts (screens.json), update settings (updates.json) and build caches. Put your ha_token file here (file with only the HA token, see Overview). Back up screens.json and updates.json." Type="Path" Display="always" Required="true" Mask="false">/mnt/user/appdata/tessera/data</Config>
+  <Config Name="HA_API" Target="HA_API" Default="http://127.0.0.1:8123/api" Mode="" Description="Home Assistant API address, must be http and end in /api. With host networking use the Unraid IP (e.g. http://192.168.1.10:8123/api) unless Home Assistant also runs in host mode on this server." Type="Variable" Display="always" Required="true" Mask="false">http://127.0.0.1:8123/api</Config>
+  <Config Name="HA_TOKEN_FILE" Target="HA_TOKEN_FILE" Default="/data/ha_token" Mode="" Description="Path INSIDE the container to the file that contains ONLY your Home Assistant long-lived access token. Default /data/ha_token = the file ha_token in the Data path above (create it before first start, see Overview). Do not paste the token here." Type="Variable" Display="always" Required="true" Mask="false">/data/ha_token</Config>
+  <Config Name="SCREEN_DEV" Target="SCREEN_DEV" Default="1" Mode="" Description="1 = run without the Home Assistant Supervisor (required for this standalone setup)." Type="Variable" Display="advanced" Required="true" Mask="false">1</Config>
+  <Config Name="ESPHOME_CONFIG" Target="ESPHOME_CONFIG" Default="/config" Mode="" Description="ESPHome folder inside the container. Keep at /config." Type="Variable" Display="advanced" Required="true" Mask="false">/config</Config>
+  <Config Name="SCREEN_DATA" Target="SCREEN_DATA" Default="/data" Mode="" Description="Data folder inside the container. Keep at /data." Type="Variable" Display="advanced" Required="true" Mask="false">/data</Config>
+  <Config Name="SCREEN_CAMERA_URL (optional)" Target="SCREEN_CAMERA_URL" Default="" Mode="" Description="Optional. Address where screens load camera images if it differs from Home Assistant's address, e.g. http://192.168.1.20:8098. Delete this row if unused; a blank value is passed as an empty string." Type="Variable" Display="advanced" Required="false" Mask="false"/>
+  <Config Name="SCREEN_CAMERA_PORT (optional)" Target="SCREEN_CAMERA_PORT" Default="" Mode="" Description="Optional. Alternate camera image port instead of 8098. Delete this row if unused." Type="Variable" Display="advanced" Required="false" Mask="false"/>
+</Container>

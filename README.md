@@ -6,6 +6,7 @@ Unraid Community Applications templates maintained by SkyThes.
 |---|---|---|
 | [`vaultls.xml`](./vaultls.xml) | [VaulTLS](https://github.com/7ritn/VaulTLS) | Selfhostable web app for managing mTLS certificates |
 | [`z2m-device-tracker.xml`](./z2m-device-tracker.xml) | [Z2M Device Tracker](https://github.com/tempus2016/z2m-device-tracker) | History, health and alerts for every Zigbee2MQTT device |
+| [`tessera.xml`](./tessera.xml) | [Tessera Screen Manager](https://github.com/MaxGramser/homeassistant_espscreen) | Design and flash ESP32 touch panels for Home Assistant |
 
 ---
 
@@ -110,12 +111,63 @@ The optional HACS integration needs the app URL and an API token: run `docker ex
 
 ---
 
+# Tessera Unraid Template
+
+Template for [Tessera Screen Manager](https://github.com/MaxGramser/homeassistant_espscreen) (formerly ESP Screens) — design and flash ESP32 touch panels that show and control Home Assistant. This is the standalone Docker version, for Home Assistant Container setups (no Supervisor/App store). The container uses host networking.
+
+## Installation
+
+1. Download [`tessera.xml`](./tessera.xml) from this repo.
+2. Copy it to `/boot/config/plugins/dockerMan/templates-user/` on your Unraid server.
+3. In the Unraid WebGUI, go to **Docker → Add Container → Template** and select **Tessera**.
+
+## Before the first start: create the token file
+
+Tessera reads the Home Assistant token from a **file**, not from a variable (there is no documented variable for the token itself).
+
+1. In Home Assistant: profile → **Security** → **Long-lived access tokens** → **Create token**. Copy it, it is only shown once.
+2. On Unraid, create a file `ha_token` in the Data path (default `/mnt/user/appdata/tessera/data/ha_token`) containing **only** the token — no quotes, no `Bearer`, no extra text.
+3. Restrict it: `chmod 600 /mnt/user/appdata/tessera/data/ha_token`
+4. Start the container and check the log for `Home Assistant connected`. If it is missing, check the token file and `HA_API`.
+
+## Configuration
+
+| Variable | Required | Description |
+|---|---|---|
+| `HA_API` | ✅ Yes | Home Assistant API address, `http` and ending in `/api`, reachable from the container, e.g. `http://192.168.1.10:8123/api` |
+| `HA_TOKEN_FILE` | ✅ Yes | Path **inside the container** to the token file. Default `/data/ha_token` = `ha_token` in the Data path |
+| `SCREEN_DEV` | ✅ Yes | Keep at `1`: run without the Home Assistant Supervisor |
+| `ESPHOME_CONFIG` / `SCREEN_DATA` | ✅ Yes | Keep at `/config` and `/data` |
+| `SCREEN_CAMERA_URL` | Optional | Address where screens load camera images, if different from Home Assistant's address |
+| `SCREEN_CAMERA_PORT` | Optional | Alternate camera image port instead of `8098` |
+
+> ⚠️ **Unraid quirk:** optional variables left blank are still passed to the container as empty strings. Delete the `SCREEN_CAMERA_*` rows entirely if you don't use them.
+
+### Volumes
+
+| Container Path | Purpose |
+|---|---|
+| `/config` | ESPHome files for the screens and Wi-Fi secrets. Back this up |
+| `/data` | Layouts (`screens.json`), update settings (`updates.json`), build caches and your `ha_token` file. Back up the two `.json` files; the `build`, `esphome`, `idf` and `platformio` folders are caches |
+
+### Ports (host networking)
+
+| Port | Purpose |
+|---|---|
+| `8099` | Web UI. No login and listens on `127.0.0.1` only: use a reverse proxy/ingress on the Unraid host or an SSH tunnel, never expose it |
+| `8098` | Camera images and album covers. Must be reachable from the screens (check firewall rules if screens are on another VLAN) |
+
+To flash a screen over USB, add a **Device** entry (e.g. `/dev/ttyUSB0`) to the container. Otherwise flash from Chrome or Edge on your own computer.
+
+---
+
 ## License
 
-This repository (the Unraid template files) is licensed under [MIT](./LICENSE). VaulTLS is licensed under [GPL-3.0](https://github.com/7ritn/VaulTLS/blob/main/LICENSE); Z2M Device Tracker is licensed under [MIT](https://github.com/tempus2016/z2m-device-tracker/blob/main/LICENSE).
+This repository (the Unraid template files) is licensed under [MIT](./LICENSE). VaulTLS is licensed under [GPL-3.0](https://github.com/7ritn/VaulTLS/blob/main/LICENSE); Z2M Device Tracker is licensed under [MIT](https://github.com/tempus2016/z2m-device-tracker/blob/main/LICENSE). See the [Tessera repository](https://github.com/MaxGramser/homeassistant_espscreen/blob/main/LICENSE) for Tessera's license.
 
 ## Support
 
 - Template issues: open an issue in this repo
 - VaulTLS application issues: [7ritn/VaulTLS issues](https://github.com/7ritn/VaulTLS/issues)
 - Z2M Device Tracker application issues: [tempus2016/z2m-device-tracker issues](https://github.com/tempus2016/z2m-device-tracker/issues)
+- Tessera application issues: [MaxGramser/homeassistant_espscreen issues](https://github.com/MaxGramser/homeassistant_espscreen/issues)
